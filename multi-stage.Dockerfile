@@ -4,6 +4,7 @@
 FROM microsoft/dotnet:2.2-sdk
 WORKDIR /app
 
+RUN dotnet dev-certs https -ep https/Strava.NetCore.pfx -p crypt1cpa55w0rd
 #setup node
 ENV NODE_VERSION 10.15.0
 # Linux
@@ -35,17 +36,13 @@ RUN dotnet restore Strava.NetCore/Strava.NetCore.csproj
 # Copy everything else and build
 COPY . ./
 RUN dotnet publish Strava.NetCore/Strava.NetCore.csproj -c Release -o out
-RUN mkdir -p Strava.NetCore/out/https
-RUN dotnet dev-certs https -ep Strava.NetCore/out/https/Strava.NetCore.pfx -p crypt1cpa55w0rd
 
 # build runtime image
 EXPOSE 80
 EXPOSE 443
 
-# COPY /app/Strava.NetCore/out .
-# COPY https/* Strava.NetCore/out/https
-WORKDIR Strava.NetCore/out/
-
+COPY /app/Strava.NetCore/out .
+COPY /app/https ./https
 
 ENV ASPNETCORE_URLS="https://+;http://+"
 ENV ASPNETCORE_HTTPS_PORT=8001
