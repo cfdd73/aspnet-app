@@ -9,8 +9,8 @@ image:
 service:
   name: aspnet-app
   type: ClusterIP
-  externalPort: 5000
-  internalPort: 80
+  externalPort: 443
+  internalPort: 443
   annotations:
     fabric8.io/expose: "true"
     fabric8.io/ingress.annotations: "kubernetes.io/ingress.class: nginx"
